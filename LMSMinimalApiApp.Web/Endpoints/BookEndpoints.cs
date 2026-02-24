@@ -11,7 +11,7 @@ namespace LMSMinimalApiApp.Web.Endpoints
             ArgumentNullException.ThrowIfNull(endpoints);
 
             endpoints.MapGet("Books", GetBooks);
-            endpoints.MapGet("{ID:int}", GetBook);
+            endpoints.MapGet("Books/{ID:int}", GetBook);
 
             return endpoints;
         }
