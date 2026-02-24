@@ -29,5 +29,24 @@ namespace LMSMinimalApiApp.Services
 
             return books;
         }
+
+        public BooksDTO? GetBookById(int ID)
+        {
+            Books? book = _DbContext.Books
+                   .FirstOrDefault(b => b.Id == ID);
+
+            if (book is null) return null;
+
+            BooksDTO dto = new(
+                book.Id,
+                book.BookName,
+                book.Author,
+                book.Publisher,
+                book.Price,
+                book.CategoryID
+            );
+
+            return dto;
+        }
     }
 }
