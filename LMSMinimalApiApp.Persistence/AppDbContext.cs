@@ -12,8 +12,9 @@ namespace LMSMinimalApiApp.Persistence
         }
 
         public DbSet<Books> Books { get; init; }
+        public DbSet<BookIssued> BookIssued { get; init; }
 
-
+        public DbSet<Users> Users { get; init; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             Type t = typeof(AppDbContext);

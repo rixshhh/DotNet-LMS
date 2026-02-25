@@ -15,8 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.
-    AddScoped<BookServices>();
+builder.Services
+    .AddScoped<BookServices>()
+    .AddScoped<BookIssuedServices>();
 
 var app = builder.Build();
 
@@ -30,7 +31,8 @@ app.UseHttpsRedirection();
 
 RouteGroupBuilder apiGroup = app.MapGroup("api");
 
-apiGroup.MapBookEndpoints();
+apiGroup.MapBookEndpoints()
+        .MapBookIssuedEndpoints();
 
 app.MapGet("/", () => $"Running in {app.Environment.EnvironmentName} right now.");
 

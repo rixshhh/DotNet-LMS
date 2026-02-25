@@ -1,4 +1,5 @@
 ﻿using LMSMinimalApiApp.Core.DTOs;
+using LMSMinimalApiApp.Persistence;
 using LMSMinimalApiApp.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -12,6 +13,7 @@ namespace LMSMinimalApiApp.Web.Endpoints
 
             endpoints.MapGet("Books", GetBooks);
             endpoints.MapGet("Books/{ID:int}", GetBook);
+            endpoints.MapGet("Books/Search", Search);
 
             return endpoints;
         }
@@ -28,6 +30,14 @@ namespace LMSMinimalApiApp.Web.Endpoints
             BooksDTO? book = bookServices.GetBookById(ID);
 
             return book == null ? TypedResults.NotFound() : TypedResults.Ok(book);
+        }
+
+        private static IResult Search(BookServices bookServices,string BookName)
+        {
+            IEnumerable<BooksDTO> books = bookServices.GetBookBySearch(BookName);
+
+            return books == null ? TypedResults.NotFound() : TypedResults.Ok(books);
+
         }
     }
 }

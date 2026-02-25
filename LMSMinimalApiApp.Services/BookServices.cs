@@ -48,5 +48,28 @@ namespace LMSMinimalApiApp.Services
 
             return dto;
         }
+
+        public IEnumerable<BooksDTO> GetBookBySearch( string? BookName)
+        {
+            var query = _DbContext.Books.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(BookName))
+            {
+                query = query.Where(b => b.BookName.Contains(BookName));
+            }
+
+            var result = query
+                 .Select(b => new BooksDTO
+                 (
+                     b.Id,
+                     b.BookName,
+                     b.Author,
+                     b.Publisher,
+                     b.Price,
+                     b.CategoryID
+                 )).ToList();
+
+            return result;
+        }
     }
 }

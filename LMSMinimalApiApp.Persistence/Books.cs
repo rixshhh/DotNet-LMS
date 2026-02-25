@@ -15,6 +15,8 @@ namespace LMSMinimalApiApp.Persistence
         public required string Publisher { get; init; }
         public required decimal Price { get; init; }
         public int CategoryID { get; init; }
-        
+
+        public IList<BookIssued> BookIssueds { get; init; }
+
     }
 }
