@@ -6,17 +6,18 @@ namespace LMSMinimalApiApp.Persistence
 {
     public sealed class Books
     {
-       [Key] public int Id { get; init; }
+       [Key] public int Id { get; set; }
        
-        public required string BookName { get; init; }
+        public required string BookName { get; set; }
 
-        public required string Author { get; init; }
+        public required string Author { get; set; }
 
-        public required string Publisher { get; init; }
-        public required decimal Price { get; init; }
-        public int CategoryID { get; init; }
+        public required string Publisher { get; set; }
+        public required decimal Price { get; set; }
+        public int CategoryID { get; set; }
 
-        public IList<BookIssued> BookIssueds { get; init; }
+
+        public IList<BookIssued> BookIssueds { get; set; } = [];
 
     }
 }

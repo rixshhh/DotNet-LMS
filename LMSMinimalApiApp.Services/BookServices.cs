@@ -1,5 +1,8 @@
-﻿using LMSMinimalApiApp.Core.DTOs;
+﻿using Azure.Core;
+using LMSMinimalApiApp.Core.DTOs;
+using LMSMinimalApiApp.Core.Requests;
 using LMSMinimalApiApp.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LMSMinimalApiApp.Services
@@ -70,6 +73,86 @@ namespace LMSMinimalApiApp.Services
                  )).ToList();
 
             return result;
+        }
+
+        public BooksDTO? UpdateBook(int Id, PostBookRequests requests)
+        {
+            try
+            {
+                var book = _DbContext.Books.Find(Id);
+
+                if (book is null) return null;
+
+                book.BookName = requests.BookName;
+                book.Author = requests.Author;
+                book.Publisher = requests.Publisher;
+                book.Price = requests.Price;
+                book.CategoryID = requests.CategoryID;
+
+                _DbContext.SaveChanges();
+
+                return new BooksDTO(
+                    book.Id,
+                    book.BookName,
+                    book.Author,
+                    book.Publisher,
+                    book.Price,
+                    book.CategoryID
+                );
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex,
+                    "Error while creating a Book.");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while Updating a Book with name {@BookName}.", requests);
+            }
+
+            return null;
+        }
+
+        public BooksDTO? DeleteBook(int Id)
+        {
+            try
+            {
+                var book = _DbContext.Books.FirstOrDefault(b => b.Id == Id);
+
+                if (book is null)
+                {
+                    throw new ConflictException($"Cannot find this Id {Id}");
+                }
+
+                _DbContext.Books.Remove(book);
+
+                _DbContext.SaveChanges();
+
+                return new BooksDTO(
+                   book.Id,
+                   book.BookName,
+                   book.Author,
+                   book.Publisher,
+                   book.Price,
+                   book.CategoryID
+               );
+            }
+            catch (ConflictException ex)
+            {
+                _logger.LogError(ex, "Error while creating a state with BookId {Id}. Some conflicts occured.",
+                    Id);
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex,
+                    "Error while Deleting a Book.");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while Deleting a Book with name {@BookName}.", Id);
+            }
+
+            return null;
         }
     }
 }
